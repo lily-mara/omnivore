@@ -1,18 +1,20 @@
-FROM node:18.16-alpine
+FROM node:18.16-bullseye
 
-# Installs latest Chromium (92) package.
-RUN apk add --no-cache \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y \
     chromium \
-    nss \
-    freetype \
-    harfbuzz \
+    libnss3 \
+    libfreetype6 \
+    libharfbuzz-dev \
     ca-certificates \
-    ttf-freefont \
+    fonts-freefont-ttf \
     nodejs \
     yarn \
     g++ \
     make \
-    python3
+    python3=3.9.*
 
 WORKDIR /app
 

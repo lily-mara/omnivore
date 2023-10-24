@@ -1,9 +1,16 @@
-FROM node:18.16-alpine as builder
+FROM node:18.16-bullseye as builder
 
 WORKDIR /app
 
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-RUN apk add g++ make python3
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y \
+    g++ \
+    make \
+    python3=3.9.*
 
 COPY package.json .
 COPY yarn.lock .
